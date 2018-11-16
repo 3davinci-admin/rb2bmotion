@@ -1,0 +1,10 @@
+Package: rb2bmotion
+Type: Package
+Title: API for B2B Motion 
+Version: 0.1.0
+Author: Artem Starchenko, 3DaVinci
+Maintainer: Artem Starchenko <artem@starchenko.ru>
+Description: API B2B Motion https://dataexport.docs.apiary.io/
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
