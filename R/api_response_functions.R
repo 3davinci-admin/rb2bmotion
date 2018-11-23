@@ -10,11 +10,19 @@ api_get_response <- function(url) {
   # !todo check secret_key for api_url_site(url)
 
   # load response
-  response <- GET(url, add_headers(`Secret-Key` = get_b2b_key(api_url_site(url))))
+  response <- httr::GET(
+    url,
+    httr::add_headers(`Secret-Key` = get_b2b_key(api_url_site(url)))
+  )
 
   # Check connection
-  if(http_error(response)) {
-    stop("Ошибка при подключении к ", api_url_site(url),". Код ошибки: ", response$status_code)
+  if (httr::http_error(response)) {
+    stop(
+      "Ошибка при подключении к ", 
+      api_url_site(url), 
+      ". Код ошибки: ", 
+      response$status_code
+    )
   }
 
   return(response)
@@ -142,11 +150,11 @@ api_tidy_response <- function(response) {
 
     tbl <-
       tibble(
-        specificationId              = json %>% map("id") %>% as.character(),
-        userId                       = json %>% map("user") %>% map("id"),
-        userGroupId                  = json %>% map("user") %>% map("group") %>% map("id"),
-        userGroupName                = json %>% map("user") %>% map("group") %>% map("name"),
-        userCompanyId                = json %>% map("companyId"),
+        specificationId             = json %>% map("id") %>% as.character(),
+        userId                      = json %>% map("user") %>% map("id"),
+        userGroupId                 = json %>% map("user") %>% map("group") %>% map("id"),
+        userGroupName               = json %>% map("user") %>% map("group") %>% map("name"),
+        userCompanyId               = json %>% map("companyId"),
         specificationName           = json %>% map("name") %>% as.character(),
         specificationDescription    = json %>% map("description") %>% as.character(),
         archive                     = json %>% map("archive") %>% as.logical(),
