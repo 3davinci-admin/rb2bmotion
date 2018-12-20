@@ -65,7 +65,7 @@ api_tidy_response <- function(response) {
         involvementName   = json %>% map("involvement") %>% map("name") %>% as.character(),
         regionId          = json %>% map("region") %>% map("id") %>% as.character(),
         regionName        = json %>% map("region") %>% map("name") %>% as.character(),
-        createdAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+        customerCreatedAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -87,7 +87,7 @@ api_tidy_response <- function(response) {
         legalEntities            = json %>% map("legalEntities"),
         addresses                = json %>% map("addresses"),
         payments                 = json %>% map("payments"),
-        createdAt                = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+        companyCreatedAt                = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -124,8 +124,8 @@ api_tidy_response <- function(response) {
         orderCustomItemsTotalPrice = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
         orderDocumentsCount        = json %>% map("orderDocumentsCount") %>% as.integer(),
         isTestOrder                = json %>% map("isTestOrder") %>% as.logical(),
-        createdAt                  = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(),
-        updatedAt                  = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
+        orderCreatedAt                  = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(),
+        orderUpdatedAt                  = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
         currentPriceUpdatedAt      = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
       )
 
@@ -163,8 +163,8 @@ api_tidy_response <- function(response) {
         customItems                 = json %>% map("customItems"),
         share                       = json %>% map("share"),
         commercialOffers            = json %>% map("commercialOffers"),
-        createdAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        updatedAt                   = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
+        specificationCreatedAt      = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+        specificationUpdatedAt      = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
         currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
       )
 
@@ -183,8 +183,8 @@ api_tidy_response <- function(response) {
         items                       = json %>% map("items"),
         customItems                 = json %>% map("customItems"),
         totalPrice                  = json %>% map("totalPrice"),
-        createdAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        updatedAt                   = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
+        cartCreatedAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+        cartUpdatedAt                   = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
         currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
       )
 
@@ -205,7 +205,7 @@ api_tidy_response <- function(response) {
         totalAmount                 = json %>% map("totalAmount") %>% as.double(),
         paid                        = json %>% map("paid") %>% as.character() %>% as.logical(),
         orderId                     = json %>% map("orderId") %>% as.character(),
-        createdAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+        documentCreatedAt           = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -232,8 +232,8 @@ api_tidy_response <- function(response) {
         archive                      = json %>% map("archive") %>% as.character() %>% as.logical(),
         items                        = json %>% map("items"),
         customItems                  = json %>% map("items"),
-        createdAt                    = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        updatedAt                    = json %>% map("updatedAt") %>% as.character() %>% ymd_hms()
+        commercialOfferCreatedAt     = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+        commercialOfferUpdatedAt     = json %>% map("updatedAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -270,5 +270,5 @@ api_tidy_response <- function(response) {
       )
   }
 
-  tbl
+  tbl 
 }
