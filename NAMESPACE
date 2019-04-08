@@ -1,5 +1,6 @@
 exportPattern("^(api|b2b)+")
 import(magrittr)
+import(tibble)
 import(dplyr)
 import(purrr)
 import(lubridate)
