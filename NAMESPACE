@@ -1,4 +1,9 @@
 exportPattern("^(api|b2b)+")
 import(magrittr)
+import(dplyr)
+import(purrr)
+import(lubridate)
+import(httr)
+import(jsonlite)
 
 
