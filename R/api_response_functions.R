@@ -1,6 +1,9 @@
 # Функции, которые реализуют методы API
 # https://dataexport.docs.apiary.io/
-
+library(jsonlite)
+library(httr)
+library(lubidate)
+library(tidyverse)
 
 
 # get API response --------------------------------------------------------
