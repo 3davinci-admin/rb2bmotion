@@ -7,13 +7,12 @@ Maintainer: Artem Starchenko <artem@starchenko.ru>
 Description: API B2B Motion https://dataexport.docs.apiary.io/
 Imports: 
     magrittr,
+    tibble,
     dplyr,
     purrr,
     lubridate,
     httr,
-    jsonlite,
-    rlang, 
-    stringr
+    jsonlite
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

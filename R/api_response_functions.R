@@ -55,15 +55,15 @@ api_tidy_response <- function(response) {
         phone             = json %>% map("phone") %>% as.character(),
         email             = json %>% map("email")%>% as.character(),
         emailVerified     = json %>% map("emailVerified") %>% as.character(),
-        companyId         = json %>% map("company") %>% map("id") %>% as.character(),
-        companyName       = json %>% map("company") %>% map("name") %>% as.character(),
+        currentCompanyId  = json %>% map("company") %>% map("id") %>% as.character(),
+        currentCompanyName= json %>% map("company") %>% map("name") %>% as.character(),
         targetId          = json %>% map("target") %>% map("id") %>% as.character(),
         targetName        = json %>% map("target") %>% map("name") %>% as.character(),
         involvementId     = json %>% map("involvement") %>% map("id") %>% as.character(),
         involvementName   = json %>% map("involvement") %>% map("name") %>% as.character(),
         regionId          = json %>% map("region") %>% map("id") %>% as.character(),
         regionName        = json %>% map("region") %>% map("name") %>% as.character(),
-        customerCreatedAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+        customerCreatedAt = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -85,7 +85,7 @@ api_tidy_response <- function(response) {
         legalEntities            = json %>% map("legalEntities"),
         addresses                = json %>% map("addresses"),
         payments                 = json %>% map("payments"),
-        companyCreatedAt                = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+        companyCreatedAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
       )
 
   }
@@ -104,15 +104,15 @@ api_tidy_response <- function(response) {
         customerRegionName         = json %>% map("customer") %>% map("region") %>% map("name") %>% as.character(),
 
         chatChannelId              = json %>% map("chatChannelId") %>% as.character(),
-        merchant                   = json %>% map("merchant") %>% as.character(),
-        companyId                  = json %>% map("companyId") %>% as.character(),
-        managers                   = json %>% map("managers"),
+        orderMerchant              = json %>% map("merchant") %>% as.character(),
+        orderCompanyId             = json %>% map("companyId") %>% as.character(),
+        orderManagers              = json %>% map("managers"),
 
         statusId                   = json %>% map("status") %>% map("id") %>% as.character(),
         statusName                 = json %>% map("status") %>% map("name") %>% as.character(),
         comment                    = json %>% map("comment") %>% as.character(),
         sourceId                   = json %>% map("source") %>% map("id") %>% as.character(),
-        sourceName                   = json %>% map("source") %>% map("name") %>% as.character(),
+        sourceName                 = json %>% map("source") %>% map("name") %>% as.character(),
 
         newDocumentsCount          = json %>% map("newDocumentsCount") %>% as.integer(),
         isNewStatus                = json %>% map("isNewStatus") %>% as.logical(),
@@ -122,8 +122,8 @@ api_tidy_response <- function(response) {
         orderCustomItemsTotalPrice = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
         orderDocumentsCount        = json %>% map("orderDocumentsCount") %>% as.integer(),
         isTestOrder                = json %>% map("isTestOrder") %>% as.logical(),
-        orderCreatedAt                  = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(),
-        orderUpdatedAt                  = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
+        orderCreatedAt             = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(),
+        orderUpdatedAt             = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
         currentPriceUpdatedAt      = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
       )
 

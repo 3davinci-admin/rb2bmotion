@@ -1,15 +1,30 @@
 # API url functions https://dataexport.docs.apiary.io/
 
+#' Get all API methods from https://dataexport.docs.apiary.io/
+
+
 # list of available API methods ---------------------------------------
 api_all_methods <- function() {
-    
-    c("user", "company", "order", "order-items", "specification", "user-cart", "document", 
-        "commercial-offer", "product")
+  
+    c("user", 
+      "company", 
+      "order", 
+      "order-items", 
+      "specification", 
+      "user-cart", 
+      "document", 
+      "commercial-offer", 
+      "product")
 }
 
 
+#' @describeIn Create new URL for API response 
+#' @param b2b_site B2bmotion site adress whithout http or / (avs.express) 
+#' @param method Method for export imformation from b2bmotion (api_all_methods() – list of available methods)
+#' @param limit Limit for elements in export list (default limit = 1000)
+#' @param offset Determinds how much first elements skip 
+#' @param filters --- 
 
-# new URL for API response -------------------------------------------------
 api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, filters = NULL) {
     
     if (!length(method) == 1) 
