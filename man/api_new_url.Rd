@@ -10,7 +10,7 @@ api_new_url(b2b_site, method, limit = 1000, offset = 0,
 \arguments{
 \item{b2b_site}{B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)}
 
-\item{method}{method from api_all_methods() functions}
+\item{method}{method from \code{\link{api_all_methods}}}
 
 \item{limit}{maximum count of elements in export API response}
 

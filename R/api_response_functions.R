@@ -1,7 +1,5 @@
-# Функции, которые реализуют методы API
-# https://dataexport.docs.apiary.io/
-
-# get API response --------------------------------------------------------
+#' Get http response from url
+#' @param url URL from \code{\link{api_new_url}}
 
 api_get_response <- function(url) {
 
@@ -27,7 +25,11 @@ api_get_response <- function(url) {
 }
 
 
-# tidy API response  ------------------------------------------------------------
+#' Tidy response 
+#' 
+#' Create tidy tibble from http-response 
+#' 
+#' @param response http-response from \code{\link{api_get_response}}
 api_tidy_response <- function(response) {
 
   if (!class(response) == "response") stop("argument is not response class")

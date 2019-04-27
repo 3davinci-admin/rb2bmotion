@@ -2,9 +2,19 @@
 % Please edit documentation in R/api_url_functions.R
 \name{api_url_set_method}
 \alias{api_url_set_method}
+\alias{api_url_method<-}
 \title{Set API method to url}
 \usage{
 api_url_set_method(url, method)
+
+api_url_method(url) <- value
+}
+\arguments{
+\item{url}{URL to change}
+
+\item{method}{new method from \code{\link{api_all_methods}}}
+
+\item{value}{character new method}
 }
 \description{
 Set the method to url

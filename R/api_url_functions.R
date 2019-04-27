@@ -1,12 +1,6 @@
-# API url functions https://dataexport.docs.apiary.io/
-
-
-
-# list of available API methods ---------------------------------------
-
 #' All API methods
 #' 
-#' Get all API methods from https://dataexport.docs.apiary.io/
+#' Get all API methods from \url{https://dataexport.docs.apiary.io/}
 
 api_all_methods <- function() {
   
@@ -22,15 +16,12 @@ api_all_methods <- function() {
 }
 
 
-# API new URL --------------------------------------------------------
-
-
 #' Create new URL for API request
 #' 
 #' Returns the character link from parameters
 #' 
 #' @param b2b_site B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)
-#' @param method method from api_all_methods() functions
+#' @param method method from \code{\link{api_all_methods}}
 #' @param limit maximum count of elements in export API response 
 #' @param offset how much element to skip
 #' @param filters character string to filter for current method
@@ -74,8 +65,6 @@ api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, filters = NU
 }
 
 
-# get API method from url ---------------------------------------------
-
 #' Get API method from url 
 #' 
 #' Returns the method from url
@@ -92,12 +81,26 @@ api_url_method <- function(url) {
     method
 }
 
-# set API method to url ---------------------------------------------
 
-#' Assigment API method to url 
+#' Set API method to url 
 #' 
-#' Assigment the method to url
+#' Set the method to url
+#' @param url URL to change
+#' @param method new method from \code{\link{api_all_methods}}
 
+api_url_set_method <- function(url, method) {
+  
+  stopifnot(method %in% api_all_methods())
+  
+  patern_method <- reduce(api_all_methods(), paste, sep = "|")
+  
+  url %>% stringr::str_replace(paste0("(?<=/export-data/)(", patern_method, ")(?=\\?)"), method)
+  
+}
+
+
+#' @rdname api_url_set_method
+#' @param value character new method
 `api_url_method<-` <- function(url, value) {
     
     stopifnot(value %in% api_all_methods())
@@ -108,28 +111,10 @@ api_url_method <- function(url) {
     
 }
 
-#' Set API method to url 
-#' 
-#' Set the method to url
 
-api_url_set_method <- function(url, method) {
-    
-    stopifnot(method %in% api_all_methods())
-    
-    patern_method <- reduce(api_all_methods(), paste, sep = "|")
-    
-    url %>% stringr::str_replace(paste0("(?<=/export-data/)(", patern_method, ")(?=\\?)"), method)
-    
-}
-
-
-#  Get site from url ------------------------------------------------
 #' Get site from url
 #' 
 #' Get B2Bmotion site adress from url
-
-
-
 api_url_site <- function(url) {
     
     url %>% stringr::str_extract("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)")
@@ -137,7 +122,18 @@ api_url_site <- function(url) {
 }
 
 
-# set site to url ------------------------------------------------
+#' Set site to url
+#' 
+#' Set B2Bmotion site adress to url
+#' @param url URT to change site
+#' @param site new site 
+api_url_set_site <- function(url, site) {
+  
+  url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", site)
+  
+}
+
+#' @param value new site
 `api_url_site<-` <- function(url, value) {
     
     url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", value)
@@ -145,10 +141,6 @@ api_url_site <- function(url) {
 }
 
 
-api_url_set_site <- function(url, site) {
-    
-    url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", site)
-    
-}
+
 
 

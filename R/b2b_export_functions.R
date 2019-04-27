@@ -1,4 +1,9 @@
-# B2B export functions
+#' B2B export functions
+#' 
+#' @param b2b_site B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)
+#' @param filters filters string 
+#' @param method API method from \code{\link{api_all_methods}}
+#' @param limit maximum elements in one page
 
 b2b_export <- function(b2b_site, method, filters = NULL, limit = 100) {
     

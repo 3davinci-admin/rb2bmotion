@@ -7,5 +7,5 @@
 api_all_methods()
 }
 \description{
-Get all API methods from https://dataexport.docs.apiary.io/
+Get all API methods from \url{https://dataexport.docs.apiary.io/}
 }
