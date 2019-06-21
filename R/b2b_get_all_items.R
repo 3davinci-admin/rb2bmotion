@@ -52,6 +52,8 @@ b2b_get_all_items <-
     json_list %>%
       map_df(function(json) {
         tibble(
+          # Далее следует список полей, который пока был нужен в работе
+          # Его следует расширять
           id = json %>% map_chr("id"),
           type = json %>% map_chr("type"),
           article = json %>% map_chr("article"),
