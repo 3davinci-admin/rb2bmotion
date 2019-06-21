@@ -115,6 +115,8 @@ api_url_set_method <- function(url, method) {
 #' Get site from url
 #' 
 #' Get B2Bmotion site adress from url
+
+# Эта функция используется в USER-API также
 api_url_site <- function(url) {
     
     url %>% stringr::str_extract("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)")
