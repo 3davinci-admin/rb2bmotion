@@ -242,32 +242,32 @@ api_tidy_response <- function(response) {
   if (api_url_method(response$url) == "product") {
     tbl <-
       tibble(
-        productId                  = json %>% map("id") %>% as.character(),
-        productExternalId          = json %>% map("externalId") %>% as.character(),
-        article                    = json %>% map("article") %>% as.character(),
-        manufacturerCode           = json %>% map("manufacturerCode")  %>% as.character(),
+        productId                  = json %>% map_chr("id"),
+        productExternalId          = json %>% map_chr("externalId"),
+        article                    = json %>% map_chr("article"),
+        manufacturerCode           = json %>% map_chr("manufacturerCode"),
         productIdentifiers         = json %>% map("productIdentifiers"),
         manufacturer               = json %>% map("manufacturer"),
-        brandId                    = json %>% map("brand") %>% map("id"),
-        brandName                  = json %>% map("brand") %>% map("name"),
+        brandId                    = json %>% map("brand") %>% map_chr("id"),
+        brandName                  = json %>% map("brand") %>% map_chr("name"), 
         brandSynonyms              = json %>% map("brand") %>% map("synonyms"),
-        productName                = json %>% map("name") %>% as.character(),
-        nameOfManufacturer         = json %>% map("nameOfManufacturer") %>% as.character(),
-        multiplicity               = json %>% map("multiplicity") %>% as.double(),
-        unitName                   = json %>% map("unitName") %>% as.character(),
+        productName                = json %>% map_chr("name"),
+        nameOfManufacturer         = json %>% map_chr("nameOfManufacturer"),
+        multiplicity               = json %>% map_dbl("multiplicity"),
+        unitName                   = json %>% map_chr("unitName"),
         # ??? почему только одна цена??? (а не несколько прайс-листов)
         price                      = json %>% map("price"),
         series                     = json %>% map("series"),
         country                    = json %>% map("country"),
-        hasImage                   = json %>% map("hasImage") %>% as.character() %>% as.logical(),
-        hasFeatures                = json %>% map("hasFeatures") %>% as.character() %>% as.logical(),
-        hasCertificates            = json %>% map("hasCertificates") %>% as.character() %>% as.logical(),
-        stockStatus                = json %>% map("stockStatus"),
+        hasImage                   = json %>% map_chr("hasImage") %>% as.logical(),
+        hasFeatures                = json %>% map_chr("hasFeatures") %>% as.logical(),
+        hasCertificates            = json %>% map_chr("hasCertificates") %>% as.logical(),
+        stockStatus                = json %>% map_chr("stockStatus"),
         section                    = json %>% map("section"),
         tokens                     = json %>% map("tokens"),
         productAnalog              = json %>% map("productAnalog"),
         productRelated             = json %>% map("productRelated")
-      )
+      ) 
   }
 
   tbl 
