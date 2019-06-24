@@ -239,6 +239,7 @@ api_tidy_response <- function(response) {
   }
 
   # tidy product ------------------------
+  # Здесь еще нужно приводить в порядок -------------
   if (api_url_method(response$url) == "product") {
     tbl <-
       tibble(
