@@ -1,15 +1,23 @@
 #' B2B export functions
 #' 
 #' @param b2b_site B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)
-#' @param filters filters string 
+#' @param ... filters 
 #' @param method API method from \code{\link{api_all_methods}}
 #' @param limit maximum elements in one page
 
-b2b_export <- function(b2b_site, method, filters = NULL, limit = 100) {
+b2b_export <- function(b2b_site, method, ...) {
+    # Определяем лимит объектов на странице
+    limit  <-  500
+    filter_list <- rlang::list2(...)
+    
+    # Обнуляем список фильтров, если они пустые
+    if (is_empty(filter_list)) {
+      filter_list <- NULL
+    }
     
     # How much elements in export response  --------------------------
     totalCount <- b2b_site %>% 
-      api_new_url(method = method, limit = 1, filters = filters) %>% 
+      api_new_url(method = method, limit = 1, filters = filter_list) %>% 
       api_get_response() %>% 
       content("text") %>% 
       fromJSON() %>% 
@@ -34,7 +42,7 @@ b2b_export <- function(b2b_site, method, filters = NULL, limit = 100) {
           api_new_url(method = method, 
                       limit = limit, 
                       offset = offset, 
-                      filters = filters) %>% 
+                      filters = filter_list) %>% 
           api_get_response() %>% 
           api_tidy_response()
         

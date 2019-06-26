@@ -4,14 +4,14 @@
 \alias{b2b_export}
 \title{B2B export functions}
 \usage{
-b2b_export(b2b_site, method, filters = NULL, limit = 100)
+b2b_export(b2b_site, method, ...)
 }
 \arguments{
 \item{b2b_site}{B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)}
 
 \item{method}{API method from \code{\link{api_all_methods}}}
 
-\item{filters}{filters string}
+\item{...}{filters}
 
 \item{limit}{maximum elements in one page}
 }

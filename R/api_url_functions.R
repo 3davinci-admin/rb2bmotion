@@ -64,7 +64,6 @@ api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, filters = NU
   return(url)
 }
 
-
 #' Get API method from url 
 #' 
 #' Returns the method from url
