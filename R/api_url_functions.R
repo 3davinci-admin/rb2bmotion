@@ -26,6 +26,7 @@ api_all_methods <- function() {
 #' @param offset how much element to skip
 #' @param filters character string to filter for current method
 #' @import lubridate
+#' @import rlang
 #' @export 
 
 api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
