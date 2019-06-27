@@ -27,11 +27,12 @@ api_all_methods <- function() {
 #' @param filters character string to filter for current method
 
 
-api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, filters = NULL) {
+api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
   
-  if (!length(method) == 1) 
-    stop()
-  if (!method %in% api_all_methods()) 
+  # Определяем фильтр из ...
+  filters = list2(...)
+  
+  if (!length(method) == 1 &!method %in% api_all_methods()) 
     stop(paste(method, "method is not available"))
   if (limit > 1000) 
     stop("limit can not be more than 1000")

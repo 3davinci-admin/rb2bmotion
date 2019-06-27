@@ -4,8 +4,7 @@
 \alias{api_new_url}
 \title{Create new URL for API request}
 \usage{
-api_new_url(b2b_site, method, limit = 1000, offset = 0,
-  filters = NULL)
+api_new_url(b2b_site, method, limit = 1000, offset = 0, ...)
 }
 \arguments{
 \item{b2b_site}{B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)}
