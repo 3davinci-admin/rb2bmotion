@@ -1,18 +1,27 @@
 #' Get http response from url
 #' @param url URL from \code{\link{api_new_url}}
+#' @import httr 
+#' @import jsonlite
+#' @import purrr
+#' @import dplyr
+#' @import tibble
+#' @import magrittr
+#' @export 
 
+# TODO нужно добавить тесты (сохранить запросы из sanergy для тест --------
 api_get_response <- function(url) {
 
-  # !todo check secret_key for api_url_site(url)
-
+  # TODO: проверить наличие Secret-Key и вывести предупреждение, 
+  # если его нет
+  
   # load response
-  response <- httr::GET(
+  response <- GET(
     url,
-    httr::add_headers(`Secret-Key` = get_b2b_key(api_url_site(url)))
+    add_headers(`Secret-Key` = get_b2b_key(api_url_site(url)))
   )
 
   # Check connection
-  if (httr::http_error(response)) {
+  if (http_error(response)) {
     stop(
       "Ошибка при подключении к ", 
       api_url_site(url), 
@@ -30,6 +39,7 @@ api_get_response <- function(url) {
 #' Create tidy tibble from http-response 
 #' 
 #' @param response http-response from \code{\link{api_get_response}}
+#' @export 
 api_tidy_response <- function(response) {
 
   if (!class(response) == "response") stop("argument is not response class")
@@ -93,6 +103,8 @@ api_tidy_response <- function(response) {
   }
 
   # tidy order ------------------------
+  
+  
   if (api_url_method(response$url) == "order") {
 
     tbl <-
@@ -124,7 +136,13 @@ api_tidy_response <- function(response) {
         orderCustomItemsTotalPrice = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
         orderDocumentsCount        = json %>% map("orderDocumentsCount") %>% as.integer(),
         isTestOrder                = json %>% map("isTestOrder") %>% as.logical(),
-        orderCreatedAt             = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(),
+        #TODO нужно заменить функцию lubridate на базовую --------
+        # Warning messages:
+        # 1: All formats failed to parse. No formats found. 
+        # 2: All formats failed to parse. No formats found. 
+        # 3: All formats failed to parse. No formats found. 
+        # 4: All formats failed to parse. No formats found. 
+        orderCreatedAt             = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(), 
         orderUpdatedAt             = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
         currentPriceUpdatedAt      = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
       )
@@ -256,7 +274,7 @@ api_tidy_response <- function(response) {
         nameOfManufacturer         = json %>% map("nameOfManufacturer") %>% as.character(),
         multiplicity               = json %>% map("multiplicity") %>% as.double(),
         unitName                   = json %>% map("unitName") %>% as.character(),
-        # ??? почему только одна цена??? (а не несколько прайс-листов)
+        # TODO: ??? почему только одна цена??? (а не несколько прайс-листов)
         price                      = json %>% map("price"),
         series                     = json %>% map("series"),
         country                    = json %>% map("country"),

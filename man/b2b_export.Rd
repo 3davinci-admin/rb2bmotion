@@ -11,7 +11,7 @@ b2b_export(b2b_site, method, ...)
 
 \item{method}{API method from \code{\link{api_all_methods}}}
 
-\item{...}{filters}
+\item{...}{filters for \code{\link{api_new_url}}}
 
 \item{limit}{maximum elements in one page}
 }

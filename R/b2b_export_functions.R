@@ -3,7 +3,8 @@
 #' @param b2b_site B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)
 #' @param method API method from \code{\link{api_all_methods}}
 #' @param limit maximum elements in one page
-#' @param ... filters 
+#' @param ... filters for \code{\link{api_new_url}}
+#' @export 
 
 b2b_export <- function(b2b_site, method, ...) {
   
@@ -33,7 +34,7 @@ b2b_export <- function(b2b_site, method, ...) {
     }
     
     # ------
-    print(paste("Load", method, "from ", b2b_site))
+    print(paste("Load", totalCount, method, "from ", b2b_site))
     
     
     # Page number  -----------------------

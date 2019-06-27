@@ -1,7 +1,7 @@
 #' All API methods
 #' 
 #' Get all API methods from \url{https://dataexport.docs.apiary.io/}
-
+#' @export 
 api_all_methods <- function() {
   
     c("user", 
@@ -25,7 +25,8 @@ api_all_methods <- function() {
 #' @param limit maximum count of elements in export API response 
 #' @param offset how much element to skip
 #' @param filters character string to filter for current method
-
+#' @import lubridate
+#' @export 
 
 api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
   
@@ -68,7 +69,7 @@ api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
 #' Get API method from url 
 #' 
 #' Returns the method from url
-
+#' @export 
 api_url_method <- function(url) {
     
     patern_method <- reduce(api_all_methods(), paste, sep = "|")
@@ -101,6 +102,8 @@ api_url_set_method <- function(url, method) {
 
 #' @rdname api_url_set_method
 #' @param value character new method
+#' @export 
+#' @export 
 `api_url_method<-` <- function(url, value) {
     
     stopifnot(value %in% api_all_methods())
@@ -117,6 +120,7 @@ api_url_set_method <- function(url, method) {
 #' Get B2Bmotion site adress from url
 
 # Эта функция используется в USER-API также
+#' @export 
 api_url_site <- function(url) {
     
     url %>% stringr::str_extract("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)")
@@ -129,6 +133,7 @@ api_url_site <- function(url) {
 #' Set B2Bmotion site adress to url
 #' @param url URT to change site
 #' @param site new site 
+#' @export 
 api_url_set_site <- function(url, site) {
   
   url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", site)
@@ -136,6 +141,7 @@ api_url_set_site <- function(url, site) {
 }
 
 #' @param value new site
+#' @export 
 `api_url_site<-` <- function(url, value) {
     
     url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", value)
