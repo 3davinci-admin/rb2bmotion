@@ -29,10 +29,8 @@ api_all_methods <- function() {
 #' @import rlang
 #' @export 
 
-api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
+api_new_url <- function(b2b_site, method, limit = 100, offset = 0, ...) {
   
-  # Определяем фильтр из ...
-  filters = list2(...)
   
   if (!length(method) == 1 &!method %in% api_all_methods()) 
     stop(paste(method, "method is not available"))
@@ -42,29 +40,9 @@ api_new_url <- function(b2b_site, method, limit = 1000, offset = 0, ...) {
   url_base <- paste0("https://", b2b_site, "/", "api/v1/export-data/", method, "?", 
                      "limit=", limit, "&offset=", offset)
   
-  # filters list to string
-  filters_list_to_str <- function(filters_list) {
-    
-    if (is.null(filters_list)) 
-      return(NULL)
-    # check is list
-    stopifnot(is.list(filters_list))
-    # chek all element lenght == 1
-    stopifnot(all(map_lgl(filters_list, ~length(.x) == 1)))
-    
-    filters_str <- map2_chr(names(filters_list), filters_list, ~paste0("&filters%5B", 
-                                                                       .x, "%5D=", .y)) %>% reduce(paste0)
-    
-    filters_str
-  }
   
-  
-  # ! to do add filters string
-  url_filters <- filters_list_to_str(filters)
-  
-  url <- paste0(url_base, url_filters)
-  
-  return(url)
+  # Добавляем фильтр и выводим результат
+  api_url_add_filter(url_base, ...)
 }
 
 #' Get API method from url 
@@ -147,6 +125,46 @@ api_url_set_site <- function(url, site) {
     
     url %>% stringr::str_replace("(?<=https://)[a-z, 0-9, \\-, \\.]*(?=/)", value)
     
+}
+
+
+#' Управление фильтрами для запросов к Export API 
+#'
+#' @description 
+#'
+#' `api_create_url_filter` создаёт строку (потом заменим на объект S3) для
+#' последующего присоединения к URL для запроса по API:
+#'
+#' - для начала мы делаем только в формате character
+#' 
+#' - TODO: потом нужно оформить объект S3 `api_url_filter`
+#'
+#' @details 
+#' 
+#' Стоит обратить внимание, что это просто character
+#'
+#' @import rlang
+#' @import purrr
+#' @export
+
+api_url_add_filter <- function(url, ...) {
+  # Список аргументов
+  args <- list2(...)
+  
+  result <- ""
+  
+  for (name in names2(args)) {
+    # Если это скаляр
+    if (args[[name]] %>% is_scalar_atomic()) {
+      result = paste0(result, "&filters[", name,"]=",args[[name]])
+    }  else {
+      for (x in args[[name]]) {
+        result = paste0(result, "&filters[", name,"][]=", x)
+      }
+    }
+  }
+  
+  paste0(url, result)
 }
 
 

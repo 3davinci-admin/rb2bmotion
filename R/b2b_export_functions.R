@@ -10,7 +10,10 @@ b2b_export <- function(b2b_site, method, ...) {
   
    
   # Определяем лимит объектов на каждой странице
-    limit <-  500
+    limit <-  100
+  
+
+  # TODO: провести первый запрос и проверить подключение --------------------
     
     # How much elements in export response  --------------------------
     totalCount <- b2b_site %>% 
