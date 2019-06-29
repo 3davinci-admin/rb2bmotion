@@ -12,6 +12,12 @@
 api_get_response <- function(url) {
 
   # TODO: проверить наличие Secret-Key и вывести предупреждение, 
+  # TOTO: попробовать функцию tryCatch
+  # tryCatch({
+  #   !identical(attr(group_data(.tbl), ".drop"), FALSE)
+  # }, error = function(e){
+  #   TRUE
+  # })
   # если его нет
   
   # load response
@@ -29,10 +35,24 @@ api_get_response <- function(url) {
       response$status_code
     )
   }
+  
+  # Добавляем класс к методу
+  response <- append(class(response),paste0("response_", api_url_method(url)))
 
   return(response)
 }
 
+# Функция для получения JSON-файла из ответа сервера
+#' @export 
+api_get_json <- function(response) {
+
+  if (!class(response) == "response") stop("argument is not response class")
+  if (http_error(response)) stop("http_error")
+  
+  response %>%
+    content() %>%
+    .[["items"]]
+}
 
 #' Tidy response 
 #' 
@@ -40,254 +60,231 @@ api_get_response <- function(url) {
 #' 
 #' @param response http-response from \code{\link{api_get_response}}
 #' @export 
-api_tidy_response <- function(response) {
-
-  if (!class(response) == "response") stop("argument is not response class")
-  if (http_error(response)) stop("http_error")
-
-  # retrive json content to list
-  json <-
-    response %>%
-    content() %>%
-    .[["items"]]
-
-  # tidy user ------------------------
-  if (api_url_method(response$url) == "user") {
-
-    tbl <-
-      tibble(
-        customerId        = json %>% map("id") %>% as.character(),
-        groupId           = json %>% map("group") %>% map("id") %>% as.character(),
-        groupName         = json %>% map("group") %>% map("name") %>% as.character(),
-        role              = json %>% map("role") %>% map("role")%>% as.character(),
-        lastname          = json %>% map("lastname") %>% as.character(),
-        firstname         = json %>% map("firstname") %>% as.character(),
-        middlename        = json %>% map("middlename") %>% as.character(),
-        gender            = json %>% map("gender") %>% as.character(),
-        phone             = json %>% map("phone") %>% as.character(),
-        email             = json %>% map("email")%>% as.character(),
-        emailVerified     = json %>% map("emailVerified") %>% as.character(),
-        currentCompanyId  = json %>% map("company") %>% map("id") %>% as.character(),
-        currentCompanyName= json %>% map("company") %>% map("name") %>% as.character(),
-        targetId          = json %>% map("target") %>% map("id") %>% as.character(),
-        targetName        = json %>% map("target") %>% map("name") %>% as.character(),
-        involvementId     = json %>% map("involvement") %>% map("id") %>% as.character(),
-        involvementName   = json %>% map("involvement") %>% map("name") %>% as.character(),
-        regionId          = json %>% map("region") %>% map("id") %>% as.character(),
-        regionName        = json %>% map("region") %>% map("name") %>% as.character(),
-        customerCreatedAt = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-  # tidy company
-  if (api_url_method(response$url) == "company") {
-
-    tbl <-
-      tibble(
-        companyId                = json %>% map("id") %>% as.character(),
-        companyExternalId        = json %>% map("group") %>% as.character(),
-        companyName              = json %>% map("name") %>% as.character(),
-        companyDescription       = json %>% map("description") %>% as.character(),
-        isIndividual             = json %>% map("isIndividual") %>% as.logical(),
-        priceTypeId              = json %>% map("priceType") %>% map("id") %>% as.character(),
-        priceTypeName            = json %>% map("priceType") %>% map("name") %>% as.character(),
-        priceTypeCurrency        = json %>% map("priceType") %>% map("currency"),
-        priceWithVat             = json %>% map("priceType") %>% map("withVat") %>% as.character(),
-        legalEntities            = json %>% map("legalEntities"),
-        addresses                = json %>% map("addresses"),
-        payments                 = json %>% map("payments"),
-        companyCreatedAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-  # tidy order ------------------------
-  
-  
-  if (api_url_method(response$url) == "order") {
-
-    tbl <-
-      tibble(
-        orderId                    = json %>% map("id") %>% as.character(),
-        ip                         = json %>% map("ip") %>% as.character(),
-        customerId                 = json %>% map("customer") %>% map("id") %>% as.character(),
-        customerEmail              = json %>% map("customer") %>% map("email") %>% as.character(),
-        customerPhone              = json %>% map("customer") %>% map("phone") %>% as.character(),
-        customerRegionId           = json %>% map("customer") %>% map("region") %>% map("id") %>% as.character(),
-        customerRegionName         = json %>% map("customer") %>% map("region") %>% map("name") %>% as.character(),
-
-        chatChannelId              = json %>% map("chatChannelId") %>% as.character(),
-        orderMerchant              = json %>% map("merchant") %>% as.character(),
-        orderCompanyId             = json %>% map("companyId") %>% as.character(),
-        orderManagers              = json %>% map("managers"),
-
-        statusId                   = json %>% map("status") %>% map("id") %>% as.character(),
-        statusName                 = json %>% map("status") %>% map("name") %>% as.character(),
-        comment                    = json %>% map("comment") %>% as.character(),
-        sourceId                   = json %>% map("source") %>% map("id") %>% as.character(),
-        sourceName                 = json %>% map("source") %>% map("name") %>% as.character(),
-
-        newDocumentsCount          = json %>% map("newDocumentsCount") %>% as.integer(),
-        isNewStatus                = json %>% map("isNewStatus") %>% as.logical(),
-        documents                  = json %>% map("documents"),
-
-        orderItemsTotalPrice       = json %>% map("orderItemsTotalPrice") %>% as.double(),
-        orderCustomItemsTotalPrice = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
-        orderDocumentsCount        = json %>% map("orderDocumentsCount") %>% as.integer(),
-        isTestOrder                = json %>% map("isTestOrder") %>% as.logical(),
-        #TODO нужно заменить функцию lubridate на базовую --------
-        # Warning messages:
-        # 1: All formats failed to parse. No formats found. 
-        # 2: All formats failed to parse. No formats found. 
-        # 3: All formats failed to parse. No formats found. 
-        # 4: All formats failed to parse. No formats found. 
-        orderCreatedAt             = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(), 
-        orderUpdatedAt             = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
-        currentPriceUpdatedAt      = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-  # tidy order-items ------------------------
-  if (api_url_method(response$url) == "order-items") {
-
-    tbl <-
-      tibble(
-        orderId                      = json %>% map("id") %>% as.character(),
-        orderItemsTotalPrice         = json %>% map("orderItemsTotalPrice")  %>% as.double(),
-        orderCustomItemsTotalPrice   = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
-        items                        = json %>% map("items"),
-        customItems                  = json %>% map("customItems")
-      )
-
-  }
-
-  # tidy specification ------------------------
-  if (api_url_method(response$url) == "specification") {
-
-    tbl <-
-      tibble(
-        specificationId             = json %>% map("id") %>% as.character(),
-        userId                      = json %>% map("user") %>% map("id"),
-        userGroupId                 = json %>% map("user") %>% map("group") %>% map("id"),
-        userGroupName               = json %>% map("user") %>% map("group") %>% map("name"),
-        userCompanyId               = json %>% map("companyId"),
-        specificationName           = json %>% map("name") %>% as.character(),
-        specificationDescription    = json %>% map("description") %>% as.character(),
-        archive                     = json %>% map("archive") %>% as.logical(),
-        orders                      = json %>% map("orders"),
-        items                       = json %>% map("items"),
-        customItems                 = json %>% map("customItems"),
-        share                       = json %>% map("share"),
-        commercialOffers            = json %>% map("commercialOffers"),
-        specificationCreatedAt      = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        specificationUpdatedAt      = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
-        currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
-      )
-
-
-  }
-
-  # tidy user-cart ------------------------
-  if (api_url_method(response$url) == "user-cart") {
-
-    tbl <-
-      tibble(
-        userId                      = json %>% map("user") %>% map("id"),
-        userGroupId                 = json %>% map("user") %>% map("group") %>% map("id"),
-        userGroupName               = json %>% map("user") %>% map("group") %>% map("name"),
-        userCompanyId               = json %>% map("companyId"),
-        items                       = json %>% map("items"),
-        customItems                 = json %>% map("customItems"),
-        totalPrice                  = json %>% map("totalPrice"),
-        cartCreatedAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        cartUpdatedAt                   = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
-        currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-
-  # tidy document ------------------------
-  if (api_url_method(response$url) == "document") {
-
-    tbl <-
-      tibble(
-        documentId                  = json %>% map("id") %>% as.character(),
-        externalId                  = json %>% map("externalId") %>% as.character(),
-        documentNumber              = json %>% map("number") %>% as.character(),
-        documentName                = json %>% map("name") %>% as.character(),
-        documentTypeId              = json %>% map("type") %>% map("id") %>% as.character(),
-        documentTypeName            = json %>% map("type") %>% map("name") %>% as.character(),
-        totalAmount                 = json %>% map("totalAmount") %>% as.double(),
-        paid                        = json %>% map("paid") %>% as.character() %>% as.logical(),
-        orderId                     = json %>% map("orderId") %>% as.character(),
-        documentCreatedAt           = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-  # tidy commercial-offer ------------------------
-  if (api_url_method(response$url) == "commercial-offer") {
-
-    tbl <-
-      tibble(
-        commercialOfferId           = json %>% map("id") %>% as.character(),
-        userId                       = json %>% map("user") %>% map("id"),
-        userGroupId                  = json %>% map("user") %>% map("group") %>% map("id"),
-        userGroupName                = json %>% map("user") %>% map("group") %>% map("name"),
-        specificationId              = json %>% map("specificationId") %>% as.character(),
-        commercialOfferName          = json %>% map("name") %>% as.character(),
-        commercialOfferDescription   = json %>% map("description") %>% as.character(),
-        logo                         = json %>% map("logo") %>% as.character(),
-        contactsIntro                = json %>% map("contactsIntro") %>% as.character(),
-        contactsFinal                = json %>% map("contactsFinal") %>% as.character(),
-        title                        = json %>% map("title") %>% as.character(),
-        textIntro                    = json %>% map("textIntro") %>% as.character(),
-        textFinal                    = json %>% map("textFinal") %>% as.character(),
-        vatRate                      = json %>% map("vatRate") %>% as.double(),
-        archive                      = json %>% map("archive") %>% as.character() %>% as.logical(),
-        items                        = json %>% map("items"),
-        customItems                  = json %>% map("items"),
-        commercialOfferCreatedAt     = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
-        commercialOfferUpdatedAt     = json %>% map("updatedAt") %>% as.character() %>% ymd_hms()
-      )
-
-  }
-
-  # tidy product ------------------------
-  # Здесь еще нужно приводить в порядок -------------
-  if (api_url_method(response$url) == "product") {
-    tbl <-
-      tibble(
-        productId                  = json %>% map("id") %>% as.character(),
-        productExternalId          = json %>% map("externalId") %>% as.character(),
-        article                    = json %>% map("article") %>% as.character(),
-        manufacturerCode           = json %>% map("manufacturerCode")  %>% as.character(),
-        productIdentifiers         = json %>% map("productIdentifiers"),
-        manufacturer               = json %>% map("manufacturer"),
-        brandId                    = json %>% map("brand") %>% map("id") %>% as.character(),
-        brandName                  = json %>% map("brand") %>% map("name")%>% as.character(),
-        brandSynonyms              = json %>% map("brand") %>% map("synonyms"),
-        productName                = json %>% map("name") %>% as.character(),
-        nameOfManufacturer         = json %>% map("nameOfManufacturer") %>% as.character(),
-        multiplicity               = json %>% map("multiplicity") %>% as.double(),
-        unitName                   = json %>% map("unitName") %>% as.character(),
-        # TODO: ??? почему только одна цена??? (а не несколько прайс-листов)
-        price                      = json %>% map("price"),
-        series                     = json %>% map("series"),
-        country                    = json %>% map("country"),
-        hasImage                   = json %>% map("hasImage") %>% as.character() %>% as.logical(),
-        hasFeatures                = json %>% map("hasFeatures") %>% as.character() %>% as.logical(),
-        hasCertificates            = json %>% map("hasCertificates") %>% as.character() %>% as.logical(),
-        stockStatus                = json %>% map("stockStatus"),
-        section                    = json %>% map("section"),
-        tokens                     = json %>% map("tokens"),
-        productAnalog              = json %>% map("productAnalog"),
-        productRelated             = json %>% map("productRelated")
-      ) 
-  }
-
-  tbl 
+# Общий метод
+api_tidy_response <- function(response){
+  UseMethod("api_tidy_response", response)
 }
+
+# Список пользователей ----------
+#' @export 
+api_tidy_response.response_user <- function(response) {
+  # retrive json content to list
+  json <- api_get_json(response)
+    
+  # Выдаем результат
+  tibble(
+    customerId        = json %>% map("id") %>% as.character(),
+    groupId           = json %>% map("group") %>% map("id") %>% as.character(),
+    groupName         = json %>% map("group") %>% map("name") %>% as.character(),
+    role              = json %>% map("role") %>% map("role")%>% as.character(),
+    lastname          = json %>% map("lastname") %>% as.character(),
+    firstname         = json %>% map("firstname") %>% as.character(),
+    middlename        = json %>% map("middlename") %>% as.character(),
+    gender            = json %>% map("gender") %>% as.character(),
+    phone             = json %>% map("phone") %>% as.character(),
+    email             = json %>% map("email")%>% as.character(),
+    emailVerified     = json %>% map("emailVerified") %>% as.character(),
+    currentCompanyId  = json %>% map("company") %>% map("id") %>% as.character(),
+    currentCompanyName= json %>% map("company") %>% map("name") %>% as.character(),
+    targetId          = json %>% map("target") %>% map("id") %>% as.character(),
+    targetName        = json %>% map("target") %>% map("name") %>% as.character(),
+    involvementId     = json %>% map("involvement") %>% map("id") %>% as.character(),
+    involvementName   = json %>% map("involvement") %>% map("name") %>% as.character(),
+    regionId          = json %>% map("region") %>% map("id") %>% as.character(),
+    regionName        = json %>% map("region") %>% map("name") %>% as.character(),
+    customerCreatedAt = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+  )
+}
+
+# Список компаний ----------
+#' @export 
+api_tidy_response.response_company <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Список компаний
+  tibble(
+    companyId                = json %>% map("id") %>% as.character(),
+    companyExternalId        = json %>% map("group") %>% as.character(),
+    companyName              = json %>% map("name") %>% as.character(),
+    companyDescription       = json %>% map("description") %>% as.character(),
+    isIndividual             = json %>% map("isIndividual") %>% as.logical(),
+    priceTypeId              = json %>% map("priceType") %>% map("id") %>% as.character(),
+    priceTypeName            = json %>% map("priceType") %>% map("name") %>% as.character(),
+    priceTypeCurrency        = json %>% map("priceType") %>% map("currency"),
+    priceWithVat             = json %>% map("priceType") %>% map("withVat") %>% as.character(),
+    legalEntities            = json %>% map("legalEntities"),
+    addresses                = json %>% map("addresses"),
+    payments                 = json %>% map("payments"),
+    companyCreatedAt         = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+  )
+}
+
+# Список заказов ----------
+#' @export 
+api_tidy_response.response_order <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Список заказов
+  tibble(
+    orderId                    = json %>% map("id") %>% as.character(),
+    ip                         = json %>% map("ip") %>% as.character(),
+    customerId                 = json %>% map("customer") %>% map("id") %>% as.character(),
+    customerEmail              = json %>% map("customer") %>% map("email") %>% as.character(),
+    customerPhone              = json %>% map("customer") %>% map("phone") %>% as.character(),
+    customerRegionId           = json %>% map("customer") %>% map("region") %>% map("id") %>% as.character(),
+    customerRegionName         = json %>% map("customer") %>% map("region") %>% map("name") %>% as.character(),
+    
+    chatChannelId              = json %>% map("chatChannelId") %>% as.character(),
+    orderMerchant              = json %>% map("merchant") %>% as.character(),
+    orderCompanyId             = json %>% map("companyId") %>% as.character(),
+    orderManagers              = json %>% map("managers"),
+    
+    statusId                   = json %>% map("status") %>% map("id") %>% as.character(),
+    statusName                 = json %>% map("status") %>% map("name") %>% as.character(),
+    comment                    = json %>% map("comment") %>% as.character(),
+    sourceId                   = json %>% map("source") %>% map("id") %>% as.character(),
+    sourceName                 = json %>% map("source") %>% map("name") %>% as.character(),
+    
+    newDocumentsCount          = json %>% map("newDocumentsCount") %>% as.integer(),
+    isNewStatus                = json %>% map("isNewStatus") %>% as.logical(),
+    documents                  = json %>% map("documents"),
+    
+    orderItemsTotalPrice       = json %>% map("orderItemsTotalPrice") %>% as.double(),
+    orderCustomItemsTotalPrice = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
+    orderDocumentsCount        = json %>% map("orderDocumentsCount") %>% as.integer(),
+    isTestOrder                = json %>% map("isTestOrder") %>% as.logical(),
+    #TODO нужно заменить функцию lubridate на базовую --------
+    # Warning messages:
+    # 1: All formats failed to parse. No formats found. 
+    # 2: All formats failed to parse. No formats found. 
+    # 3: All formats failed to parse. No formats found. 
+    # 4: All formats failed to parse. No formats found. 
+    orderCreatedAt             = json %>% map_chr("createdAt") %>% as.character() %>% ymd_hms(), 
+    orderUpdatedAt             = json %>% map_chr("updatedAt") %>% as.character() %>% ymd_hms(),
+    currentPriceUpdatedAt      = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
+  )
+}
+
+# Содержание заказов ----------
+#' @export 
+api_tidy_response.response_order <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Выдаём список с содержанием заказов
+  tibble(
+    orderId                      = json %>% map("id") %>% as.character(),
+    orderItemsTotalPrice         = json %>% map("orderItemsTotalPrice")  %>% as.double(),
+    orderCustomItemsTotalPrice   = json %>% map("orderCustomItemsTotalPrice") %>% as.double(),
+    items                        = json %>% map("items"),
+    customItems                  = json %>% map("customItems")
+  )
+}
+
+
+# Спецификации ----------
+#' @export 
+api_tidy_response.response_specification <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Спецификации
+  tibble(
+    specificationId             = json %>% map("id") %>% as.character(),
+    userId                      = json %>% map("user") %>% map("id"),
+    userGroupId                 = json %>% map("user") %>% map("group") %>% map("id"),
+    userGroupName               = json %>% map("user") %>% map("group") %>% map("name"),
+    userCompanyId               = json %>% map("companyId"),
+    specificationName           = json %>% map("name") %>% as.character(),
+    specificationDescription    = json %>% map("description") %>% as.character(),
+    archive                     = json %>% map("archive") %>% as.logical(),
+    orders                      = json %>% map("orders"),
+    items                       = json %>% map("items"),
+    customItems                 = json %>% map("customItems"),
+    share                       = json %>% map("share"),
+    commercialOffers            = json %>% map("commercialOffers"),
+    specificationCreatedAt      = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+    specificationUpdatedAt      = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
+    currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
+  )
+}
+
+# Корзины
+#' @export 
+api_tidy_response.response_user-cart <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Корзины
+  tibble(
+    userId                      = json %>% map("user") %>% map("id"),
+    userGroupId                 = json %>% map("user") %>% map("group") %>% map("id"),
+    userGroupName               = json %>% map("user") %>% map("group") %>% map("name"),
+    userCompanyId               = json %>% map("companyId"),
+    items                       = json %>% map("items"),
+    customItems                 = json %>% map("customItems"),
+    totalPrice                  = json %>% map("totalPrice"),
+    cartCreatedAt                   = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+    cartUpdatedAt                   = json %>% map("updatedAt") %>% as.character() %>% ymd_hms(),
+    currentPriceUpdatedAt       = json %>% map("currentPriceUpdatedAt") %>% as.character() %>% ymd_hms()
+  )
+  
+}
+
+
+# Документы
+#' @export 
+api_tidy_response.response_document <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # Документы
+  tibble(
+    documentId                  = json %>% map("id") %>% as.character(),
+    externalId                  = json %>% map("externalId") %>% as.character(),
+    documentNumber              = json %>% map("number") %>% as.character(),
+    documentName                = json %>% map("name") %>% as.character(),
+    documentTypeId              = json %>% map("type") %>% map("id") %>% as.character(),
+    documentTypeName            = json %>% map("type") %>% map("name") %>% as.character(),
+    totalAmount                 = json %>% map("totalAmount") %>% as.double(),
+    paid                        = json %>% map("paid") %>% as.character() %>% as.logical(),
+    orderId                     = json %>% map("orderId") %>% as.character(),
+    documentCreatedAt           = json %>% map("createdAt") %>% as.character() %>% ymd_hms()
+  )
+}
+  
+# Коммерческие предложения
+#' @export 
+api_tidy_response.response_commercial-offer <- function(response){
+  # retrive json content to list
+  json <- api_get_json(response)
+  
+  # КП
+  tibble(
+    commercialOfferId           = json %>% map("id") %>% as.character(),
+    userId                       = json %>% map("user") %>% map("id"),
+    userGroupId                  = json %>% map("user") %>% map("group") %>% map("id"),
+    userGroupName                = json %>% map("user") %>% map("group") %>% map("name"),
+    specificationId              = json %>% map("specificationId") %>% as.character(),
+    commercialOfferName          = json %>% map("name") %>% as.character(),
+    commercialOfferDescription   = json %>% map("description") %>% as.character(),
+    logo                         = json %>% map("logo") %>% as.character(),
+    contactsIntro                = json %>% map("contactsIntro") %>% as.character(),
+    contactsFinal                = json %>% map("contactsFinal") %>% as.character(),
+    title                        = json %>% map("title") %>% as.character(),
+    textIntro                    = json %>% map("textIntro") %>% as.character(),
+    textFinal                    = json %>% map("textFinal") %>% as.character(),
+    vatRate                      = json %>% map("vatRate") %>% as.double(),
+    archive                      = json %>% map("archive") %>% as.character() %>% as.logical(),
+    items                        = json %>% map("items"),
+    customItems                  = json %>% map("items"),
+    commercialOfferCreatedAt     = json %>% map("createdAt") %>% as.character() %>% ymd_hms(),
+    commercialOfferUpdatedAt     = json %>% map("updatedAt") %>% as.character() %>% ymd_hms()
+  )
+  
+}
+  
+
+  
