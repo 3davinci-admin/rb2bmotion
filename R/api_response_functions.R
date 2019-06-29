@@ -221,7 +221,8 @@ api_tidy_response.response_specification <- function(response){
 }
 
 # Корзины
-#' @export 
+#' @export
+# TODO возникает проблема с именем 
 api_tidy_response.response_user_cart <- function(response){
   # retrive json content to list
   json <- api_get_json(response)
