@@ -43,7 +43,7 @@ api_get_response <- function(url) {
   if (class_name == "commercial-offer") class_name <- "commercial_offer"
   if (class_name == "user-cart") class_name <- "user_cart"
   if (class_name == "order-items") class_name <- "order_items"
-  response <- append(class(response),paste0("response_", class_name))
+  class(response) <- append(class(response),paste0("response_", class_name))
 
   return(response)
 }
