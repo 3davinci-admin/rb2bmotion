@@ -36,6 +36,7 @@ api_get_response <- function(url) {
     )
   }
   
+<<<<<<< HEAD
   # Добавляем класс по методу
   class_name <- api_url_method(url)
   # TODO нужно сделать приведение методов к правильному названию (тире заменить)
@@ -44,6 +45,10 @@ api_get_response <- function(url) {
   if (class_name == "user-cart") class_name <- "user_cart"
   if (class_name == "order-items") class_name <- "order_items"
   response <- append(class(response),paste0("response_", class_name))
+=======
+  # Добавляем класс к методу
+  response <- append(class(response),paste0("response_", api_url_method(url)))
+>>>>>>> 0341ed83275932fd34371801fd9f4b7f47cd6b42
 
   return(response)
 }
@@ -55,12 +60,18 @@ api_get_json <- function(response) {
   if (!class(response) == "response") stop("argument is not response class")
   if (http_error(response)) stop("http_error")
   
+<<<<<<< HEAD
   json <- response %>%
     content() %>%
     .[["items"]]
   
   # TODO добавить различные классы для JSON
   return(json)
+=======
+  response %>%
+    content() %>%
+    .[["items"]]
+>>>>>>> 0341ed83275932fd34371801fd9f4b7f47cd6b42
 }
 
 #' Tidy response 
@@ -178,7 +189,11 @@ api_tidy_response.response_order <- function(response){
 
 # Содержание заказов ----------
 #' @export 
+<<<<<<< HEAD
 api_tidy_response.response_order_items <- function(response){
+=======
+api_tidy_response.response_order <- function(response){
+>>>>>>> 0341ed83275932fd34371801fd9f4b7f47cd6b42
   # retrive json content to list
   json <- api_get_json(response)
   
@@ -221,9 +236,14 @@ api_tidy_response.response_specification <- function(response){
 }
 
 # Корзины
+<<<<<<< HEAD
 #' @export
 # TODO возникает проблема с именем 
 api_tidy_response.response_user_cart <- function(response){
+=======
+#' @export 
+api_tidy_response.response_user-cart <- function(response){
+>>>>>>> 0341ed83275932fd34371801fd9f4b7f47cd6b42
   # retrive json content to list
   json <- api_get_json(response)
   
@@ -267,7 +287,11 @@ api_tidy_response.response_document <- function(response){
   
 # Коммерческие предложения
 #' @export 
+<<<<<<< HEAD
 api_tidy_response.response_commercial_offer <- function(response){
+=======
+api_tidy_response.response_commercial-offer <- function(response){
+>>>>>>> 0341ed83275932fd34371801fd9f4b7f47cd6b42
   # retrive json content to list
   json <- api_get_json(response)
   
