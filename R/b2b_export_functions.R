@@ -23,16 +23,17 @@ b2b_export <- function(b2b_site, method, ...) {
       fromJSON() %>% 
       .[["totalCount"]]
     
-    # TODO! Если результат 0, то ошибка возникает
-    # Error in txtProgressBar(min = 0, max = page_num, style = 3) : 
-    #   must have 'max' > 'min' 
-    # Ошибки наблюдатся на "b2b.hogart.ru" и "b2b.sanergy.ru"
     
-     # пробуем исправить. 
    
     
     # Если нет ни одного объекта, передаём нулевой объект
     if (totalCount == 0) {
+      # TODO! Если результат 0, то ошибка возникает
+      # Error in txtProgressBar(min = 0, max = page_num, style = 3) : 
+      #   must have 'max' > 'min' 
+      # Ошибки наблюдатся на "b2b.hogart.ru" и "b2b.sanergy.ru"
+      
+      # пробуем исправить. 
       return(NULL)
     }
     
