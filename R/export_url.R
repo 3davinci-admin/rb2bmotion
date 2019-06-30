@@ -65,7 +65,7 @@ as.character.export_filters <- function(filters) {
   result <- ""
   
   # Проходим по всем элементам списка filters
-  for (name in names2(filters)) {
+  for (name in names(filters)) {
     # Для скалярных элементов добавляем простую строчку с фильтром 
     if (filters[[name]] %>% rlang::is_scalar_character()) {
       result = paste0(result, "&filters[", name,"]=",filters[[name]])

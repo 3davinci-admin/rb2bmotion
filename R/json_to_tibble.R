@@ -1,6 +1,7 @@
 #' Создание Tible из JSON
 #' @import jsonlite
 #' @import tibble
+#' @importFrom purrr modify_at
 #' @export
 
 as_tibble.api_export_json <- function(json, ...) {
