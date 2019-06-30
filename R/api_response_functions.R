@@ -7,8 +7,50 @@
 #' @import tibble
 #' @import magrittr
 #' @export 
-
 # Функция для получения ответа сервера из URL
+
+# TODO нужно добавить тесты (сохранить запросы из sanergy для тест --------
+api_get_response <- function(url) {
+  
+  # TODO: проверить наличие Secret-Key и вывести предупреждение, 
+  # TOTO: попробовать функцию tryCatch
+  # tryCatch({
+  #   !identical(attr(group_data(.tbl), ".drop"), FALSE)
+  # }, error = function(e){
+  #   TRUE
+  # })
+  # если его нет
+  
+  # load response
+  response <- GET(
+    url,
+    add_headers(`Secret-Key` = get_b2b_key(api_url_site(url)))
+  )
+  
+  # Check connection
+  if (http_error(response)) {
+    stop(
+      "Ошибка при подключении к ", 
+      api_url_site(url), 
+      ". Код ошибки: ", 
+      response$status_code
+    )
+  }
+  
+  # Добавляем класс по методу
+  class_name <- api_url_method(url)
+  # TODO нужно сделать приведение методов к правильному названию (тире заменить)
+  # на подчеркивание
+  if (class_name == "commercial-offer") class_name <- "commercial_offer"
+  if (class_name == "user-cart") class_name <- "user_cart"
+  if (class_name == "order-items") class_name <- "order_items"
+  class(response) <- append(class(response),paste0("response_", class_name))
+  
+  return(response)
+}
+
+
+
 
 # Функция для получения JSON-файла из ответа сервера
 #' @export 
