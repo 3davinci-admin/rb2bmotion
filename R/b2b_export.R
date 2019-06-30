@@ -1,12 +1,20 @@
-#' B2B export functions
+#' Функция экспорта всех объектов для конкретного метода 
+#' и набора фильтров Export API 
 #' 
-#' @param b2b_site B2Bmotion site adress ("avs.express", "b2b.el-com.ru" etc)
-#' @param method API method from \code{\link{api_all_methods}}
-#' @param limit maximum elements in one page
-#' @param ... filters for \code{\link{api_new_url}}
+#' @param b2b_site адрес сайта ("avs.express", "b2b.el-com.ru" etc)
+#' @param method метод Export API \code{\link{all_export_methods}}
+#' @param limit максимальное количество объектов на странице (при скачивании)
+#' не может быть больше 1000, рекомендуемое значение 100. Большие значения создают
+#' нагрузку на сервере особенно для методов  "product", "specification", "user-cart",
+#' "document" и "commercial-offer"
+#' @param ... набор фильтров, подробнее смотрите \code{\link{export_filters}}
+#' 
+#' 
+#' 
 #' 
 #' @import magrittr
-#' @import tibble
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr bind_rows
 #' @importFrom purrr reduce
 #' 
 #' @export 
