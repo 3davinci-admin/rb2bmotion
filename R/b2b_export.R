@@ -4,6 +4,11 @@
 #' @param method API method from \code{\link{api_all_methods}}
 #' @param limit maximum elements in one page
 #' @param ... filters for \code{\link{api_new_url}}
+#' 
+#' @import magrittr
+#' @import tibble
+#' @importFrom purrr reduce
+#' 
 #' @export 
 
 b2b_export <- function(b2b_site, method, limit = 100,  ...) {
