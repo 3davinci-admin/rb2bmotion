@@ -9,19 +9,18 @@ b2b_env$user_keys <- list() #keys for user API
 
 # Export keys set and get -------------------------------------------------
 
-#' Set export API key
+#' Установка ключа для API Export
 #'
 #'@param b2b_site B2Bmotion site adress
 #'@param b2b_key secret export-API key
 #' @export 
-b2b_set_key <- function(b2b_site, b2b_key) {
+set_api_export_key <- function(b2b_site, b2b_key) {
     b2b_env$export_keys[[b2b_site]] <- b2b_key
     invisible(b2b_site)
 }
 
 # Get export API key 
-
-get_b2b_key <- function(b2b_site) {
+get_api_export_key <- function(b2b_site) {
     b2b_env$export_keys[[b2b_site]]
 }
 
@@ -34,13 +33,13 @@ get_b2b_key <- function(b2b_site) {
 #'@param b2b_user_key secret user-API key
 #' @export 
 
-b2b_set_user_api_key <- function(b2b_site, b2b_user_key) {
+set_user_api_key <- function(b2b_site, b2b_user_key) {
   b2b_env$user_keys[[b2b_site]] <- b2b_user_key
   invisible(b2b_site)
 }
 
 # Get export API key 
 
-get_b2b_user_api_key <- function(b2b_site) {
+get_user_api_key <- function(b2b_site) {
   b2b_env$user_keys[[b2b_site]]
 }

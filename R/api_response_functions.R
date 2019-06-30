@@ -24,7 +24,7 @@ api_get_response <- function(url) {
   # load response
   response <- GET(
     url,
-    add_headers(`Secret-Key` = get_b2b_key(api_url_site(url)))
+    add_headers(`Secret-Key` = get_api_export_key(api_url_site(url)))
   )
   
   # Check connection
