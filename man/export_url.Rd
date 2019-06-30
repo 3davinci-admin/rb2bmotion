@@ -10,7 +10,7 @@ export_url(b2b_site, method, limit = 100, offset = 0, ...)
 \item{b2b_site}{адрес сайта без "http://" ("b2b.sanergy.ru", "avs.express" и т.д.)}
 
 \item{method}{метод Export API, список всех методов можно получить 
-через \code{\link{export_methods}}}
+через \code{\link{all_export_methods}}}
 
 \item{limit}{количество запрашиваемых объектов на одной странице (не может 
 быть больше 1000), рекомендуется не более 500}
