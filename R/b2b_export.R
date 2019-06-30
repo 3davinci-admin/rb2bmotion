@@ -6,7 +6,7 @@
 #' @param ... filters for \code{\link{api_new_url}}
 #' @export 
 
-b2b_export2 <- function(b2b_site, method, limit = 100,  ...) {
+b2b_export <- function(b2b_site, method, limit = 100,  ...) {
   
   
   
