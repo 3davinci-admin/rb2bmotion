@@ -1,37 +1,3 @@
-#' Список доступных методов API Export B2B Движение 
-#' 
-#' @description 
-#' Подробное описание методов на  https://dataexport.docs.apiary.io/. 
-#' Функция выводить список достпных методов в формате вектора character
-#' 
-#' @export
-export_methods <- function() {
-  c("user", 
-    "company", 
-    "order", 
-    "order-items", 
-    "specification", 
-    "user-cart", 
-    "document", 
-    "commercial-offer", 
-    "product")
-}
-
-
-#' Созданием фильтра для URL API Export
-#' 
-#' @description 
-#' Функция для создания объекта `export_filters`. Этот объект 
-#' @param ... список параметров фильтра `id = c(13, 34), createdTo = "2019-01-01"`
-#' 
-#' нужен пример
-#' @export
-export_filters <- function(...) {
-  filters <- list(...)
-  structure(filters, class = "export_filters")
-}
-
-
 #' Создание ссылки для доступа API Export B2B Движение
 #' 
 #' @description 
@@ -39,14 +5,14 @@ export_filters <- function(...) {
 #'  
 #' @param b2b_site адрес сайта без "http://" ("b2b.sanergy.ru", "avs.express" и т.д.)
 #' @param method метод Export API, список всех методов можно получить 
-#' через \code{\link{export_methods}}
+#' через \code{\link{all_export_methods}}
 #' @param limit количество запрашиваемых объектов на одной странице (не может 
 #' быть больше 1000), рекомендуется не более 500   
 #' @param ... набор фильтров
 #' @export
 export_url <- function(b2b_site, method, limit = 100, offset = 0, ...) {
   # Необходимые проверки
-  if (!length(method) == 1 &!method %in% api_export_methods()){
+  if (!length(method) == 1 &!method %in% all_export_methods()){
     stop(paste(method, "– недопустимый методв в Export API URL"))
   }
   if (limit > 1000) {
@@ -68,7 +34,23 @@ export_url <- function(b2b_site, method, limit = 100, offset = 0, ...) {
 }
 
 
-# TODO функция `add_export_filters(url, ...)` 
+#' Созданием фильтра для URL API Export
+#' 
+#' @description 
+#' Функция для создания объекта `export_filters`. Этот объект 
+#' @param ... список параметров фильтра `id = c(13, 34), createdTo = "2019-01-01"`
+#' 
+#' нужен пример
+#' @export
+export_filters <- function(...) {
+  filters <- list(...)
+  structure(filters, class = "export_filters")
+}
+
+
+
+
+# TODO функция `add_filters(url, ...)` ---------
 # - добавляем фильтры к URL
 
 #' Функция для объекта со списком фильтров API Export в строку 
