@@ -20,7 +20,7 @@ get_json.export_url <- function(url) {
   if (http_error(response)) {
     stop(
       "Ошибка при подключении к ", 
-      api_url_site(url), 
+      url$b2b_site, 
       ". Код ошибки: ", 
       response$status_code
     )
