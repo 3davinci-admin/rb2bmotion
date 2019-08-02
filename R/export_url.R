@@ -12,8 +12,9 @@
 #' @export
 export_url <- function(b2b_site, method, limit = 100, offset = 0, ...) {
   # Необходимые проверки
-  if (!length(method) == 1 &!method %in% all_export_methods()){
-    stop(paste(method, "– недопустимый методв в Export API URL"))
+  if (!length(method) == 1 | !method %in% all_export_methods()){
+    stop(paste0(method, " – недопустимый метод в Export API URL\n",
+                "Список доступных методов: all_export_methods()"))
   }
   if (limit > 1000) {
     stop("limit не может быть больше 1000")

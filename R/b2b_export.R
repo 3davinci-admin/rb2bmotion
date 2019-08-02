@@ -20,9 +20,7 @@
 #' @export 
 
 b2b_export <- function(b2b_site, method, limit = 100,  ...) {
-  
-  
-  
+
   # Узнаём общее колличество
   tbl0 <- export_url(b2b_site, method, limit = 0, offset = 0, ...) %>% 
     get_json() %>% 
